@@ -35,9 +35,20 @@ def get_label_id(service, label_name):
     except Exception as e:
         print(f"An error occurred while fetching label ID: {e}")
         return None
+        
+def print_labels(service):
+    try:
+        results = service.users().labels().list(userId='me').execute()
+        labels = results.get('labels', [])
+        for label in labels:
+            print(f"Label ID: {label['id']}, Label Name: {label['name']}")
+    except Exception as e:
+        print(f"An error occurred while fetching labels: {e}")
+
 
 def main():
     service = create_service()
+    print_labels(service)
     label_id = get_label_id(service, 'spam')
     if label_id:
         results = service.users().messages().list(userId='me', labelIds=[label_id]).execute()
